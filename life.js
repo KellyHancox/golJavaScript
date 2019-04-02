@@ -4,11 +4,11 @@ module.exports = class life{
 /**********************************************************************
  * Creates new grid with 0 rows and 0 cols
  **********************************************************************/
-constructor(){
+constructor(rows, cols){
 
   this.grid = [];
-  this.rows = 0;
-  this.cols = 0;
+  this.rows = rows;
+  this.cols = cols;
 
 }
 
@@ -28,7 +28,6 @@ constructor(){
             this.grid[i] = new Array(this.col);
             for (let j = 0; j < this.col; j++) {
                 this.grid[i][j] = temp[start++];
-                //console.log(this.grid[i][j]);
             }
         }
     }
@@ -63,13 +62,26 @@ print_grid(){
  * @param y height
  *********************************************************************/
 mutate() {
-  let newGrid = this.grid;
+
+    //creating new grid
+    let newGrid = new Array(this.rows);
+
+    //this creates space for the new grid
+    for (let p = 0; p < this.rows; p++) {
+        newGrid[p] = new Array(this.cols);
+        for (let q = 0; q< this.cols; q++){
+           newGrid[k][q]=0;
+        }
+    }
 
     for (let i = 0; i < this.rows; i++) {
         for (let j = 0; j < this.cols; j++) {
 
             let neighbors = this.get_neighbors(i, j);
-            console.log('At ' + i + ', ' + j + ' you have ' + neighbors + ' neighbors');
+            console.log('At ' + i + ', ' + j + ' you have ' +
+            neighbors + ' neighbors');
+
+            console.log("inside mutate: " + this.grid);
 
             if (this.grid[i][j] == 1) {
                 //cell is alive
@@ -92,8 +104,8 @@ mutate() {
         }
     }
 
-    console.log(newGrid);
-    return newGrid;
+    console.log("newGrid: " + newGrid);
+    this.grid = newGrid;
 
 }
 
@@ -111,6 +123,8 @@ mutate() {
  ********************************************************************/
 get_neighbors(i, j){
 
+    console.log("inside get_neighbors  " + this.grid);
+
    let count = 0;
 
    //if out of bounds
@@ -119,7 +133,8 @@ get_neighbors(i, j){
    }
 
    //if in the middle
-   else if((i > 0 && i < this.rows-1) && (j > 0 && j < this.cols-1)){
+   else if((i > 0 && i < this.rows-1) && (j > 0 && j <
+     this.cols-1)){
 
 
 

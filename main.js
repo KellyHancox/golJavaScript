@@ -4,7 +4,10 @@
  * A version of John Conway's classic Game of Life, written in C.
  * CIS 343 - Winter 2019
  *
- * Author:  Kelly Hancox
+ * Author: Kelly Hancox. Referenced Jongin Seon for assistance with
+ * reading in the bytes. Also this StackOverflow:
+ * https://stackoverflow.com/questions/36771266/
+ * what-is-the-use-of-fd-file-descriptor-in-node-js
  *
  * This program saves and loads games using the following format:
  * The first byte of the file is the height.
@@ -17,16 +20,16 @@
  * total size of the file in bytes would then be (h x w) + 2.
  */
 
- 	// Import our grid definitions
+ 	// import the life file
  	const life = require('./life.js');
-	//how to read and update files
+	// how to read and update files
  	var fs = require('fs');
-  //read lines import
+  //reading lines import
   const readSync = require('readline-sync');
-  // Import a synchronous prompt library
+  // prompt import
   const prompt = require('prompt-sync')();
+  //buffer import
   var Buffer = require('buffer').Buffer;
-  var constants = require('constants');
 
 	function main(){
 
@@ -37,29 +40,34 @@
 	}
 
   // instantiate GameOfLife object
-  let myGrid = new life();
+  let myGrid = new life(0, 0);
+
+  //create temporary grid to read in the file
   let tempGrid = [];
 
-  console.log('rows is: ' + myGrid.rows);
-  console.log('cols is: ' + myGrid.cols);
-
+  //open the file
   fs.open(process.argv[2], 'r', function(error, fd) {
+
+    //check for error
   if (error)
     throw error;
+
   var buffer = new Buffer.allocUnsafe(1);
   while (true){
     var num = fs.readSync(fd, buffer, 0, 1, null);
     if (num === 0)
       break;
 
-    //console.log('byte read', buffer[0]);
+      //give temp grid all values
     tempGrid.push(buffer[0]);
     }
 
+  //define rows and cols with first 2 numbers
   myGrid.rows = tempGrid[0];
   myGrid.cols = tempGrid[1];
 
-  console.log("Beginning with grid size  " + myGrid.rows + " rows by "+ myGrid.cols +" cols\n");
+  console.log("Beginning with grid size  " + myGrid.rows +
+  " rows by "+ myGrid.cols +" cols\n");
 
   myGrid.get_grid(tempGrid);
 	myGrid.print_grid();
@@ -69,7 +77,8 @@
 	while(1){
 
     let userInput = readSync.question("Press q to quit, w to save to disk,\n" +
-  "n to iterate multiple times, or any other\n" + "key to continue to the next generation.\n");
+    "n to iterate multiple times, or any other\n" +
+    "key to continue to the next generation.\n");
 
 		//console.log("-------------------------\n");
 
