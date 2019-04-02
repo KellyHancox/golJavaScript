@@ -46,7 +46,7 @@
   fs.open(process.argv[2], 'r', function(error, fd) {
   if (error)
     throw error;
-  var buffer = new Buffer(1);
+  var buffer = new Buffer.allocUnsafe(1);
   while (true){
     var num = fs.readSync(fd, buffer, 0, 1, null);
     if (num === 0)
@@ -54,17 +54,15 @@
 
     //console.log('byte read', buffer[0]);
     tempGrid.push(buffer[0]);
-    console.log(tempGrid);
     }
 
   myGrid.rows = tempGrid[0];
   myGrid.cols = tempGrid[1];
 
-  console.log('rows is: ' + myGrid.rows);
-  console.log('rows is: ' + myGrid.cols);
-  myGrid = myGrid.get_grid(tempGrid, myGrid.rows, myGrid.cols);
+  console.log("Beginning with grid size  " + myGrid.rows + " rows by "+ myGrid.cols +" cols\n");
 
-	myGrid.print_grid(myGrid.rows, myGrid.cols);
+  myGrid.get_grid(tempGrid);
+	myGrid.print_grid();
 
 	// Now, we will accept input in a loop until the user
 	// asks us to quit.
@@ -80,7 +78,7 @@
 			case 'q':
 				// Case 'q' results in exiting the game.  We must free
 				// our memory here.
-				return 0;
+				return process.exit(1);
 
 			case 'w':
 				// Case 'w' writes the current board to disk.  Since
@@ -90,32 +88,31 @@
 				// described in the top of this file.
 				let fileName = prompt("Enter a filename: ");
 
-				fs.writeFile(fileName + '.JSON', grid, function (err) {
+				fs.writeFile(fileName + '.gol', this.myGrid, function (err) {
 	  			if (err) throw err;
-	  			console.log('Replaced!');
+	  			console.log('There has been an error in saving this.');
 					});
+          console.log('Saved as: ' + fileName + ".gol");
+        break;
 
 			case 'n':
 				// 'n' causes us to ask the user how
 				// many evolutions to perform in a row,
 				// then executes them in a loop.
 				let num = prompt("How many iterations? ");
-				// let buf[5];
-				// fgets(buf, 5, stdin);
-				// num = atoi(buf);
 
 				console.log("Iterating " + num + " times.\n\n");
 				for(i=0; i<num; ++i){
-					grid = mutate(x, y, grid);
-					print_grid(x, y, grid);
+					myGrid.mutate();
+					myGrid.print_grid();
 				}
 				break;
 
 			default:
 				// Any other key and we evolve one iteration,
 				// print, and keep going.
-				grid = mutate(x, y, grid);
-				print_grid(x, y, grid);
+				myGrid.mutate();
+				myGrid.print_grid();
 		}
 	}
     });
