@@ -68,7 +68,7 @@ mutate() {
     for (let p = 0; p < this.rows; p++) {
         newGrid[p] = new Array(this.cols);
         for (let q = 0; q< this.cols; q++){
-           newGrid[k][q]=0;
+           newGrid[p][q]=0;
         }
     }
 
