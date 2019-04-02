@@ -14,27 +14,27 @@ constructor(rows, cols){
 
 /**********************************************************************
  * get_grid gets a grid after file is read
- * @param x the number of rows
- * @param y the number of columns
- * @param temp the grid read by file
+ * @param temp is the temporary grid read from file
  **********************************************************************/
  get_grid(temp){
         this.row = temp[0];
         this.col = temp[1];
-        let start = 2;
+        let reference = 2;
 
+    //puts temp values into the empty array
 		this.grid = new Array(this.row);
 		for (let i = 0; i < this.row; i++) {
             this.grid[i] = new Array(this.col);
             for (let j = 0; j < this.col; j++) {
-                this.grid[i][j] = temp[start++];
+                this.grid[i][j] = temp[reference++];
             }
         }
     }
 
-/*
- * print_grid
- */
+
+/**********************************************************************
+ * print_grid prints to console
+ **********************************************************************/
 print_grid(){
 
     console.log("---------------------------------");
@@ -57,9 +57,7 @@ print_grid(){
 
 /*********************************************************************
  * Mutate takes a grid and mutates that grid
- * according to Conway's rules.  A new grid is returned.
- * @param x width
- * @param y height
+ * according to Conway's rules. The current grid becomes the new one
  *********************************************************************/
 mutate() {
 
@@ -74,18 +72,18 @@ mutate() {
         }
     }
 
+    //iterates through the old board
     for (let i = 0; i < this.rows; i++) {
         for (let j = 0; j < this.cols; j++) {
 
+            // gets number of neighbors that are 1 for
+            //each cell
             let neighbors = this.get_neighbors(i, j);
-            console.log('At ' + i + ', ' + j + ' you have ' +
-            neighbors + ' neighbors');
 
-            console.log("inside mutate: " + this.grid);
-
+            //cell is alive
             if (this.grid[i][j] == 1) {
-                //cell is alive
 
+                //conway's rules
                 if (neighbors < 2 || neighbors > 3) {
                     newGrid[i][j] = 0;
 
@@ -104,26 +102,17 @@ mutate() {
         }
     }
 
-    console.log("newGrid: " + newGrid);
     this.grid = newGrid;
 
 }
 
-/*
 
- */
 /********************************************************************
  * Helper method that returns the number of live neighbors a cell has
  * @param i given coordinate row
  * @param j given coordinate column
- * @param x number of rows
- * @param y number of columns
- * @param grid board
- * @return returns how many neighbors from i,j are alive
  ********************************************************************/
 get_neighbors(i, j){
-
-    console.log("inside get_neighbors  " + this.grid);
 
    let count = 0;
 
@@ -137,47 +126,37 @@ get_neighbors(i, j){
      this.cols-1)){
 
 
-
      //up left i,j
        if(this.grid[i-1][j-1] == 1){
          count = count + 1;
-         console.log(this.grid);
-         console.log("i-1, j-1" + i +", " + j + " count: "+ count);
      }
      //above i,j
      if(this.grid[i-1][j] == 1){
            count = count + 1;
-           console.log("i-1, j" + i +", " + j + " count: "+ count);
      }
      //up right i,j
      if(this.grid[i-1][j+1] == 1){
            count = count + 1;
-           console.log("i-1, j+1" + i +", " + j + " count: "+ count);
      }
      //right i,j
      if(this.grid[i][j+1] == 1){
            count = count + 1;
-           console.log("i, j-1" + i +", " + j + " count: "+ count);
      }
      //down right i,j
      if(this.grid[i+1][j+1] == 1){
            count = count + 1;
-           console.log("i+1, j+1" + i +", " + j + " count: "+ count);
      }
      //down i,j
      if(this.grid[i+1][j] == 1){
            count = count + 1;
-           console.log("i+1, j" + i +", " + j + " count: "+ count);
      }
      //down left i,j
      if(this.grid[i+1][j-1] == 1){
            count = count + 1;
-           console.log( "i+1, j-1" + i +", " + j + " count: "+ count);
      }
      //left i,j
      if(this.grid[i][j-1] == 1){
            count = count + 1;
-           console.log("[i][j-1]" + i + ", " + j + " count: "+ count);
      }
 
      return count;

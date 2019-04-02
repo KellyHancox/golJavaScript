@@ -84,19 +84,20 @@
 
 		switch(userInput){
 
+      // Case 'q' results in exiting the game.  We must free
+      // our memory here.
 			case 'q':
-				// Case 'q' results in exiting the game.  We must free
-				// our memory here.
 				return process.exit(1);
 
-			case 'w':
-				// Case 'w' writes the current board to disk.  Since
+        // Case 'w' writes the current board to disk.  Since
 				// a file is just a string of bytes, we must first
 				// convert our grid to some representation that is
 				// a string of bytes.  We will use the representation
 				// described in the top of this file.
+			case 'w':
 				let fileName = prompt("Enter a filename: ");
 
+        //writes the file for the value put in +.gol at the end
 				fs.writeFile(fileName + '.gol', this.myGrid, function (err) {
 	  			if (err) throw err;
 	  			console.log('There has been an error in saving this.');
@@ -104,10 +105,11 @@
           console.log('Saved as: ' + fileName + ".gol");
         break;
 
+
+        // 'n' causes us to ask the user how
+        // many evolutions to perform in a row,
+        // then executes them in a loop.
 			case 'n':
-				// 'n' causes us to ask the user how
-				// many evolutions to perform in a row,
-				// then executes them in a loop.
 				let num = prompt("How many iterations? ");
 
 				console.log("Iterating " + num + " times.\n\n");
@@ -117,9 +119,9 @@
 				}
 				break;
 
+        // Any other key and we evolve one iteration,
+        // print, and keep going.
 			default:
-				// Any other key and we evolve one iteration,
-				// print, and keep going.
 				myGrid.mutate();
 				myGrid.print_grid();
 		}
